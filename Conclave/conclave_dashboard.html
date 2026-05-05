@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cónclave — Panel de Gestión</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1a2b4a;
+  --navy-light: #233560;
+  --navy-dark: #111d33;
+  --gold: #c9a84c;
+  --gold-light: #e8c96b;
+  --cream: #faf9f6;
+  --white: #ffffff;
+  --gray-50: #f7f6f3;
+  --gray-100: #eeece8;
+  --gray-200: #dddbd5;
+  --gray-400: #9e9b93;
+  --gray-600: #5c5a55;
+  --gray-800: #2e2d2a;
+  --green: #27ae60;
+  --green-bg: #edfaf4;
+  --amber: #e8a020;
+  --amber-bg: #fef8ec;
+  --red: #d63031;
+  --red-bg: #fef0f0;
+  --blue: #2563eb;
+  --blue-bg: #eff6ff;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 1px 3px rgba(26,43,74,0.08);
+  --shadow-md: 0 4px 16px rgba(26,43,74,0.12);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--gray-800);
+  min-height: 100vh;
+  font-size: 14px;
+}
+
+/* ── HEADER ── */
+.app-header {
+  background: var(--navy);
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.app-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-mark {
+  width: 32px;
+  height: 32px;
+  background: var(--gold);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--navy-dark);
+}
+
+.app-title {
+  color: var(--white);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.app-subtitle {
+  color: rgba(255,255,255,0.45);
+  font-size: 12px;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ── TABS ── */
+.tab-bar {
+  background: var(--navy-dark);
+  padding: 0 2rem;
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.tab-btn {
+  padding: 0 20px;
+  height: 44px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.45);
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  letter-spacing: 0.02em;
+}
+
+.tab-btn.active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+.tab-btn:hover:not(.active) {
+  color: rgba(255,255,255,0.75);
+}
+
+/* ── LAYOUT ── */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.content-wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* ── TOOLBAR ── */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray-400);
+  font-size: 15px;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px 0 38px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--gray-800);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus { border-color: var(--navy); }
+.search-input::placeholder { color: var(--gray-400); }
+
+.counter-badge {
+  background: var(--navy);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 14px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  height: 40px;
+  padding: 0 20px;
+  background: var(--gold);
+  color: var(--navy-dark);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+.btn-secondary {
+  height: 36px;
+  padding: 0 16px;
+  background: var(--white);
+  color: var(--gray-600);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover { border-color: var(--gray-400); color: var(--gray-800); }
+
+/* ── PROFESSIONAL CARDS ── */
+.pro-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pro-card {
+  background: var(--white);
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+
+.pro-card:hover { box-shadow: var(--shadow-md); }
+
+.pro-card-header {
+  display: grid;
+  grid-template-columns: 48px 1fr 1fr 1fr 140px 200px 80px;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.pro-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.pro-name { font-weight: 600; font-size: 14px; color: var(--gray-800); }
+.pro-specialty {
+  font-size: 12px;
+  color: var(--gray-400);
+  background: var(--gray-50);
+  padding: 3px 10px;
+  border-radius: 20px;
+  width: fit-content;
+}
+
+.pro-phone { font-size: 13px; color: var(--gray-600); font-family: 'DM Mono', monospace; }
+
+.encounters-row {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.enc-box {
+  width: 26px;
+  height: 26px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gray-400);
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  background: var(--gray-50);
+  flex-direction: column;
+}
+
+.enc-box.checked {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: var(--white);
+}
+
+.enc-box input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  margin: 0;
+}
+
+.status-pill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-align: center;
+  letter-spacing: 0.03em;
+}
+
+.status-confirmado { background: var(--green-bg); color: #1a7a42; }
+.status-pendiente { background: var(--amber-bg); color: #8a5e0a; }
+.status-cancelado { background: var(--red-bg); color: #8a1515; }
+
+.expand-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--gray-400);
+  padding: 4px;
+  transition: transform 0.2s;
+  justify-self: end;
+}
+
+.pro-card.expanded .expand-btn { transform: rotate(180deg); }
+
+/* ── EXPAND PANEL ── */
+.pro-card-body {
+  display: none;
+  border-top: 1px solid var(--gray-100);
+  padding: 20px;
+  background: var(--gray-50);
+}
+
+.pro-card.expanded .pro-card-body { display: block; }
+
+.body-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.field-group { display: flex; flex-direction: column; gap: 6px; }
+.field-label { font-size: 11px; font-weight: 600; color: var(--gray-400); letter-spacing: 0.08em; text-transform: uppercase; }
+
+.field-input {
+  height: 36px;
+  padding: 0 12px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--gray-800);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.field-input:focus { border-color: var(--navy); }
+
+.field-textarea {
+  padding: 10px 12px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--gray-800);
+  outline: none;
+  resize: vertical;
+  min-height: 60px;
+  transition: border-color 0.2s;
+}
+
+.field-textarea:focus { border-color: var(--navy); }
+
+.pago-section {
+  border-top: 1px solid var(--gray-200);
+  padding-top: 16px;
+  margin-top: 16px;
+}
+
+.pago-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gray-400);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.pago-options {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.pago-btn {
+  padding: 7px 16px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 20px;
+  background: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--gray-600);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pago-btn.selected {
+  border-color: var(--navy);
+  background: var(--navy);
+  color: var(--white);
+}
+
+.amounts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.amount-item { display: flex; flex-direction: column; gap: 5px; }
+.amount-label { font-size: 11px; color: var(--gray-400); font-weight: 500; }
+
+.amount-input {
+  height: 36px;
+  padding: 0 12px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  color: var(--gray-800);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.amount-input:focus { border-color: var(--navy); }
+.amount-input.readonly { background: var(--gray-50); color: var(--gray-600); }
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--gray-200);
+}
+
+.btn-save {
+  height: 34px;
+  padding: 0 18px;
+  background: var(--navy);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-save:hover { background: var(--navy-light); }
+
+.btn-delete {
+  height: 34px;
+  padding: 0 14px;
+  background: none;
+  color: var(--red);
+  border: 1px solid var(--red);
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-delete:hover { background: var(--red-bg); }
+
+/* ── STATUS SELECT ── */
+.status-select {
+  height: 34px;
+  padding: 0 10px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--gray-800);
+  cursor: pointer;
+  outline: none;
+}
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(17,29,51,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 1rem;
+}
+
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 540px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(17,29,51,0.25);
+}
+
+.modal-header {
+  padding: 24px 28px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-title { font-size: 18px; font-weight: 600; color: var(--navy); }
+
+.modal-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--gray-50);
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--gray-400);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.modal-close:hover { background: var(--gray-100); color: var(--gray-800); }
+
+.modal-body {
+  padding: 0 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-footer {
+  padding: 20px 28px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  border-top: 1px solid var(--gray-100);
+  margin-top: 24px;
+}
+
+/* ── COSTOS TAB ── */
+.section-card {
+  background: var(--white);
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.section-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--navy);
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+
+.section-title { font-size: 14px; font-weight: 600; color: var(--navy); }
+
+.cost-table { width: 100%; border-collapse: collapse; }
+
+.cost-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gray-400);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.cost-table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--gray-50);
+}
+
+.cost-table tr:last-child td { border-bottom: none; }
+
+.cost-input {
+  width: 100%;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  color: var(--gray-800);
+  outline: none;
+  background: var(--white);
+  transition: border-color 0.2s;
+}
+
+.cost-input:focus { border-color: var(--navy); }
+
+.cost-input.readonly {
+  background: var(--gray-50);
+  color: var(--navy);
+  font-weight: 600;
+  border-color: transparent;
+}
+
+.item-name-input {
+  width: 100%;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--gray-800);
+  outline: none;
+  background: none;
+  transition: all 0.2s;
+}
+
+.item-name-input:focus {
+  background: var(--white);
+  border-color: var(--gray-200);
+}
+
+.item-name-fixed {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gray-700, #3a3937);
+  padding: 0 10px;
+}
+
+.subtotal-row td {
+  border-top: 1px solid var(--gray-200) !important;
+  padding-top: 10px !important;
+  font-weight: 600;
+  color: var(--navy);
+  font-size: 13px;
+}
+
+.total-summary {
+  background: var(--navy);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.summary-item { text-align: center; }
+.summary-label { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+.summary-value { font-size: 22px; font-weight: 600; color: var(--white); font-family: 'DM Mono', monospace; }
+.summary-value.positive { color: var(--gold); }
+.summary-value.negative { color: #ff8080; }
+
+.btn-save-costs {
+  width: 100%;
+  height: 52px;
+  background: var(--gold);
+  color: var(--navy-dark);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.02em;
+  margin-bottom: 24px;
+}
+
+.btn-save-costs:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.3); }
+
+.event-header-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 24px;
+}
+
+.history-table { width: 100%; border-collapse: collapse; }
+.history-table th {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gray-400);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--gray-200);
+  text-align: left;
+}
+.history-table td { padding: 10px 16px; border-bottom: 1px solid var(--gray-50); font-size: 13px; }
+.history-table tr:last-child td { border-bottom: none; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--navy);
+  color: var(--white);
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 8px 24px rgba(17,29,51,0.3);
+  z-index: 9999;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.3s;
+  max-width: 320px;
+}
+
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success { background: var(--green); }
+.toast.error { background: var(--red); }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--gray-400);
+}
+.empty-state svg { width: 48px; height: 48px; margin-bottom: 12px; opacity: 0.35; }
+.empty-state p { font-size: 14px; }
+
+.col-header { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--gray-400); letter-spacing: 0.06em; text-transform: uppercase; }
+
+@media (max-width: 900px) {
+  .pro-card-header { grid-template-columns: 40px 1fr 1fr; }
+  .pro-card-header > *:nth-child(4),
+  .pro-card-header > *:nth-child(5),
+  .pro-card-header > *:nth-child(6) { display: none; }
+  .body-grid { grid-template-columns: 1fr; }
+  .amounts-grid { grid-template-columns: 1fr 1fr; }
+  .total-summary { grid-template-columns: 1fr; }
+  .event-header-fields { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="app-logo">
+    <div class="logo-mark">C</div>
+    <div>
+      <div class="app-title">Cónclave</div>
+      <div class="app-subtitle">Panel de Gestión</div>
+    </div>
+  </div>
+  <div class="status-indicator">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusText">Modo Demo</span>
+  </div>
+</header>
+
+<nav class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('profesionales', this)">Profesionales</button>
+  <button class="tab-btn" onclick="switchTab('costos', this)">Costos del Evento</button>
+</nav>
+
+<!-- ══════ TAB 1: PROFESIONALES ══════ -->
+<div class="tab-panel active" id="tab-profesionales">
+  <div class="content-wrap">
+    <div class="toolbar">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" type="text" placeholder="Buscar por nombre, apellido o especialidad…" id="searchInput" oninput="filterProfessionals()">
+      </div>
+      <div class="counter-badge" id="counterBadge">0 profesionales</div>
+      <button class="btn-primary" onclick="openModal()">+ Nuevo Profesional</button>
+    </div>
+
+    <div class="pro-grid" id="proGrid"></div>
+
+    <div class="empty-state" id="emptyState" style="display:none">
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="24" cy="16" r="8"/><path d="M8 40c0-8.837 7.163-16 16-16s16 7.163 16 16"/>
+      </svg>
+      <p>No se encontraron profesionales</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ TAB 2: COSTOS ══════ -->
+<div class="tab-panel" id="tab-costos">
+  <div class="content-wrap">
+
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon">📋</div>
+        <div class="section-title">Datos del Evento</div>
+      </div>
+      <div class="event-header-fields">
+        <div class="field-group">
+          <label class="field-label">Nombre del Evento</label>
+          <input class="field-input" type="text" id="eventName" placeholder="Ej: Cónclave N°7">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Fecha del Evento</label>
+          <input class="field-input" type="date" id="eventDate">
+        </div>
+        <div style="font-size:12px; color:var(--gray-400); white-space:nowrap; padding-bottom:6px;" id="lastSaved">Sin guardar aún</div>
+      </div>
+    </div>
+
+    <!-- Coffee -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon">☕</div>
+        <div class="section-title">Coffee / Catering</div>
+      </div>
+      <table class="cost-table" id="coffeeTable">
+        <thead>
+          <tr>
+            <th style="width:40%">Ítem</th>
+            <th>Costo Unit.</th>
+            <th>Cant.</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody id="coffeeBody"></tbody>
+        <tfoot>
+          <tr class="subtotal-row">
+            <td colspan="3" style="text-align:right; font-size:12px; color:var(--gray-600)">Subtotal Coffee</td>
+            <td><input class="cost-input readonly" id="subtotalCoffee" readonly value="$0"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- Papelería -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon">📄</div>
+        <div class="section-title">Papelería</div>
+      </div>
+      <table class="cost-table">
+        <thead>
+          <tr>
+            <th style="width:40%">Ítem</th>
+            <th>Costo Unit.</th>
+            <th>Cant.</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody id="papeleriaBody"></tbody>
+        <tfoot>
+          <tr class="subtotal-row">
+            <td colspan="3" style="text-align:right; font-size:12px; color:var(--gray-600)">Subtotal Papelería</td>
+            <td><input class="cost-input readonly" id="subtotalPapeleria" readonly value="$0"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- Logística -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon">🚗</div>
+        <div class="section-title">Logística</div>
+      </div>
+      <table class="cost-table">
+        <thead>
+          <tr>
+            <th style="width:40%">Ítem</th>
+            <th>Costo Unit.</th>
+            <th>Cant.</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody id="logisticaBody"></tbody>
+        <tfoot>
+          <tr class="subtotal-row">
+            <td colspan="3" style="text-align:right; font-size:12px; color:var(--gray-600)">Subtotal Logística</td>
+            <td><input class="cost-input readonly" id="subtotalLogistica" readonly value="$0"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- Personal -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon">👤</div>
+        <div class="section-title">Personal</div>
+      </div>
+      <table class="cost-table">
+        <thead>
+          <tr>
+            <th style="width:40%">Ítem</th>
+            <th>Costo Unit.</th>
+            <th>Cant.</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody id="personalBody"></tbody>
+        <tfoot>
+          <tr class="subtotal-row">
+            <td colspan="3" style="text-align:right; font-size:12px; color:var(--gray-600)">Subtotal Personal</td>
+            <td><input class="cost-input readonly" id="subtotalPersonal" readonly value="$0"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- Totales -->
+    <div class="total-summary">
+      <div class="summary-item">
+        <div class="summary-label">Costo Total</div>
+        <div class="summary-value" id="totalCosto">$0</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">Ingresos (Pagos)</div>
+        <div class="summary-value" id="totalIngresos">$0</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">Ganancia Estimada</div>
+        <div class="summary-value" id="totalGanancia">$0</div>
+      </div>
+    </div>
+
+    <button class="btn-save-costs" onclick="saveCosts()">💾 Guardar Costos de este Evento</button>
+
+    <!-- Historial -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon">🗂️</div>
+        <div class="section-title">Historial de Registros Guardados</div>
+      </div>
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Evento</th>
+            <th>Fecha</th>
+            <th>Guardado</th>
+            <th>Costo Total</th>
+          </tr>
+        </thead>
+        <tbody id="historyBody">
+          <tr><td colspan="4" style="text-align:center; color:var(--gray-400); padding:24px">No hay registros guardados aún.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════ MODAL NUEVO PROFESIONAL ══════ -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Nuevo Profesional</div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field-group">
+        <label class="field-label">Nombre *</label>
+        <input class="field-input" type="text" id="mNombre" placeholder="Nombre">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Apellido *</label>
+        <input class="field-input" type="text" id="mApellido" placeholder="Apellido">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Dirección</label>
+        <input class="field-input" type="text" id="mDireccion" placeholder="Calle y número">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Especialidad</label>
+        <input class="field-input" type="text" id="mEspecialidad" list="especialidades-list" placeholder="Ej: Medicina Estética">
+        <datalist id="especialidades-list">
+          <option value="Psicología">
+          <option value="Traumatología">
+          <option value="Oftalmología">
+          <option value="Medicina Estética">
+          <option value="Cirugía">
+          <option value="Veterinaria">
+          <option value="Enfermería">
+          <option value="Ginecología">
+          <option value="Kinesiología">
+          <option value="Genética y Biología Molecular">
+          <option value="Endocrinología Pediátrica">
+        </datalist>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Teléfono</label>
+        <input class="field-input" type="tel" id="mTelefono" placeholder="Ej: 3764 000-0000">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Estado</label>
+        <select class="field-input" id="mEstado">
+          <option value="Confirmado">Confirmado</option>
+          <option value="Pendiente" selected>Pendiente</option>
+          <option value="Cancelado">Cancelado</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Notas</label>
+        <textarea class="field-textarea" id="mNotas" placeholder="Observaciones…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
+      <button class="btn-primary" onclick="saveFromModal()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== CONFIGURACIÓN =====
+const SPREADSHEET_ID = "TU_ID_DE_GOOGLE_SHEETS_AQUÍ";
+const APPS_SCRIPT_URL = "TU_URL_DE_APPS_SCRIPT_AQUÍ";
+const HOJA_PROFESIONALES = "PROFESIONALES";
+const HOJA_COSTOS = "COSTOS_EVENTOS";
+const TOTAL_ENCUENTROS = 6;
+const DEMO_MODE = true;
+// =========================
+
+let professionals = [];
+let costsHistory = [];
+let editingId = null;
+let nextId = 1;
+
+// ─── DEMO DATA ───
+const demoData = [
+  { id:1, nombre:"Verónica", apellido:"Vymazal", direccion:"Av. Corrientes 1200", especialidad:"Psicología", telefono:"3764 12-3456", encuentros:[true,true,false,false,false,false], tipoPago:"Mercado Pago", montoMP:40000, montoEfectivo:40000, faltaPagar:0, notas:"40 ef 40 mp", estado:"Confirmado" },
+  { id:2, nombre:"Guillermo", apellido:"Vimazal", direccion:"Belgrano 450", especialidad:"Traumatología", telefono:"3764 98-7654", encuentros:[true,true,false,false,false,false], tipoPago:"Mercado Pago", montoMP:40000, montoEfectivo:40000, faltaPagar:0, notas:"40 mp 40 ef", estado:"Confirmado" },
+  { id:3, nombre:"Natalia", apellido:"Candia", direccion:"San Martín 890", especialidad:"Oftalmología", telefono:"3764 55-5555", encuentros:[true,false,false,false,false,false], tipoPago:"Efectivo", montoMP:0, montoEfectivo:40000, faltaPagar:0, notas:"185 efectivo. honor", estado:"Confirmado" },
+  { id:4, nombre:"Cintia", apellido:"Acuña", direccion:"Rivadavia 310", especialidad:"Medicina Estética", telefono:"3764 11-2233", encuentros:[true,false,false,false,false,false], tipoPago:"Mercado Pago", montoMP:40000, montoEfectivo:0, faltaPagar:0, notas:"", estado:"Confirmado" },
+  { id:5, nombre:"Tatiana", apellido:"Husulak", direccion:"", especialidad:"Cirugía", telefono:"3764 44-5566", encuentros:[true,false,false,false,false,false], tipoPago:"Mercado Pago", montoMP:40000, montoEfectivo:0, faltaPagar:40000, notas:"40.000 mp", estado:"Pendiente" },
+  { id:6, nombre:"Patricia", apellido:"Cardozo", direccion:"Italia 78", especialidad:"Veterinaria", telefono:"3764 77-8899", encuentros:[true,false,false,false,false,false], tipoPago:"Débito Bancario", montoMP:40000, montoEfectivo:0, faltaPagar:40000, notas:"pago por transferencia", estado:"Pendiente" },
+  { id:7, nombre:"Jessica", apellido:"Matorras", direccion:"Tucumán 230", especialidad:"Medicina Estética", telefono:"3764 22-3344", encuentros:[true,true,false,false,false,false], tipoPago:"Mercado Pago", montoMP:40000, montoEfectivo:40000, faltaPagar:0, notas:"80.000 (40ef 40mp)", estado:"Confirmado" },
+  { id:8, nombre:"Lucila", apellido:"Coronel", direccion:"", especialidad:"Enfermería", telefono:"3764 66-7788", encuentros:[true,false,false,false,false,false], tipoPago:"Mercado Pago", montoMP:80000, montoEfectivo:0, faltaPagar:0, notas:"", estado:"Confirmado" },
+  { id:9, nombre:"Leandro", apellido:"Esperanza", direccion:"", especialidad:"Medicina Estética", telefono:"3764 33-4455", encuentros:[false,false,false,false,false,false], tipoPago:"Efectivo", montoMP:0, montoEfectivo:0, faltaPagar:80000, notas:"", estado:"Pendiente" },
+  { id:10, nombre:"Romina", apellido:"Compes", direccion:"Catamarca 115", especialidad:"Psicología", telefono:"3764 88-9900", encuentros:[true,true,false,false,false,false], tipoPago:"Mercado Pago", montoMP:40000, montoEfectivo:40000, faltaPagar:0, notas:"40 mp 40 ef", estado:"Confirmado" },
+];
+
+// ─── COST TABLE CONFIG ───
+const costSections = {
+  coffee: { items: ["Dispenser","Fruta","MaxiExpress","Tahona","Impreco","Espumante"], extras: 2, subtotalEl: "subtotalCoffee", bodyEl: "coffeeBody" },
+  papeleria: { items: ["Power Point","Tarjetas","Carpetas","Hojas","Biromes","Fotocopias"], extras: 2, subtotalEl: "subtotalPapeleria", bodyEl: "papeleriaBody" },
+  logistica: { items: ["Salón","Combustible"], extras: 3, subtotalEl: "subtotalLogistica", bodyEl: "logisticaBody" },
+  personal: { items: ["Peluquería","Outfit","Estética"], extras: 2, subtotalEl: "subtotalPersonal", bodyEl: "personalBody" }
+};
+
+function initCostTables() {
+  Object.entries(costSections).forEach(([key, sec]) => {
+    const tbody = document.getElementById(sec.bodyEl);
+    tbody.innerHTML = "";
+    sec.items.forEach(item => {
+      tbody.appendChild(makeCostRow(item, false));
+    });
+    for (let i = 0; i < sec.extras; i++) {
+      tbody.appendChild(makeCostRow("", true));
+    }
+  });
+}
+
+function makeCostRow(name, editable) {
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td>${editable
+      ? `<input class="item-name-input" type="text" placeholder="Ítem adicional…">`
+      : `<span class="item-name-fixed">${name}</span>`}
+    </td>
+    <td><input class="cost-input" type="number" min="0" step="100" placeholder="0" oninput="recalcCosts()"></td>
+    <td><input class="cost-input" type="number" min="0" step="1" placeholder="1" oninput="recalcCosts()"></td>
+    <td><input class="cost-input readonly" readonly placeholder="$0"></td>
+  `;
+  return tr;
+}
+
+function recalcCosts() {
+  let totalGlobal = 0;
+  Object.entries(costSections).forEach(([key, sec]) => {
+    const tbody = document.getElementById(sec.bodyEl);
+    const rows = tbody.querySelectorAll("tr");
+    let sub = 0;
+    rows.forEach(tr => {
+      const inputs = tr.querySelectorAll("input[type=number]");
+      if (inputs.length >= 2) {
+        const costo = parseFloat(inputs[0].value) || 0;
+        const cant = parseFloat(inputs[1].value) || 0;
+        const total = costo * cant;
+        const readonlyInput = tr.querySelector(".readonly");
+        if (readonlyInput) readonlyInput.value = total > 0 ? "$" + total.toLocaleString("es-AR") : "$0";
+        sub += total;
+      }
+    });
+    document.getElementById(sec.subtotalEl).value = "$" + sub.toLocaleString("es-AR");
+    totalGlobal += sub;
+  });
+
+  document.getElementById("totalCosto").textContent = "$" + Math.round(totalGlobal).toLocaleString("es-AR");
+
+  const ingresos = professionals.reduce((acc, p) => acc + (p.montoMP || 0) + (p.montoEfectivo || 0), 0);
+  document.getElementById("totalIngresos").textContent = "$" + ingresos.toLocaleString("es-AR");
+
+  const ganancia = ingresos - totalGlobal;
+  const ganEl = document.getElementById("totalGanancia");
+  ganEl.textContent = "$" + Math.round(ganancia).toLocaleString("es-AR");
+  ganEl.className = "summary-value " + (ganancia >= 0 ? "positive" : "negative");
+}
+
+// ─── RENDER PROFESSIONALS ───
+function renderProfessionals(data) {
+  const grid = document.getElementById("proGrid");
+  const empty = document.getElementById("emptyState");
+  grid.innerHTML = "";
+
+  if (data.length === 0) {
+    empty.style.display = "block";
+    document.getElementById("counterBadge").textContent = "0 profesionales";
+    return;
+  }
+  empty.style.display = "none";
+  document.getElementById("counterBadge").textContent = `${data.length} profesional${data.length !== 1 ? "es" : ""}`;
+
+  data.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "pro-card";
+    card.id = "card-" + p.id;
+
+    const initials = (p.nombre[0] || "") + (p.apellido[0] || "");
+    const statusClass = `status-${p.estado.toLowerCase()}`;
+    const encHTML = Array.from({length: TOTAL_ENCUENTROS}, (_, i) => `
+      <div class="enc-box ${p.encuentros[i] ? 'checked' : ''}" onclick="toggleEncuentro(${p.id}, ${i}, this)">
+        <input type="checkbox" ${p.encuentros[i] ? 'checked' : ''} style="display:none">
+        E${i+1}
+      </div>
+    `).join("");
+
+    const pagoOpts = ["Efectivo","Mercado Pago","Débito Bancario"];
+    const pagoHTML = pagoOpts.map(opt => `
+      <button class="pago-btn ${p.tipoPago === opt ? 'selected' : ''}" onclick="selectPago(${p.id}, '${opt}', this)">${opt}</button>
+    `).join("");
+
+    card.innerHTML = `
+      <div class="pro-card-header" onclick="toggleCard(${p.id})">
+        <div class="pro-avatar">${initials.toUpperCase()}</div>
+        <div>
+          <div class="pro-name">${p.nombre} ${p.apellido}</div>
+          <div class="pro-specialty">${p.especialidad || "Sin especialidad"}</div>
+        </div>
+        <div class="pro-phone">${p.telefono || "—"}</div>
+        <div>${p.direccion || "<span style='color:var(--gray-400);font-size:12px'>Sin dirección</span>"}</div>
+        <div class="encounters-row">${encHTML}</div>
+        <div><span class="status-pill ${statusClass}">${p.estado}</span></div>
+        <button class="expand-btn" title="Ver detalle">▾</button>
+      </div>
+      <div class="pro-card-body">
+        <div class="body-grid">
+          <div class="field-group">
+            <label class="field-label">Nombre</label>
+            <input class="field-input" type="text" id="nombre-${p.id}" value="${p.nombre}">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Apellido</label>
+            <input class="field-input" type="text" id="apellido-${p.id}" value="${p.apellido}">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Dirección</label>
+            <input class="field-input" type="text" id="direccion-${p.id}" value="${p.direccion}">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Especialidad</label>
+            <input class="field-input" type="text" id="especialidad-${p.id}" list="especialidades-list" value="${p.especialidad}">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Teléfono</label>
+            <input class="field-input" type="tel" id="telefono-${p.id}" value="${p.telefono}">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Estado</label>
+            <select class="status-select" id="estado-${p.id}" onchange="updateStatus(${p.id}, this.value)">
+              <option ${p.estado==="Confirmado"?"selected":""}>Confirmado</option>
+              <option ${p.estado==="Pendiente"?"selected":""}>Pendiente</option>
+              <option ${p.estado==="Cancelado"?"selected":""}>Cancelado</option>
+            </select>
+          </div>
+        </div>
+        <div class="pago-section">
+          <div class="pago-title">Tipo de Pago</div>
+          <div class="pago-options" id="pago-${p.id}">${pagoHTML}</div>
+          <div class="amounts-grid">
+            <div class="amount-item">
+              <div class="amount-label">Pagado (Mercado Pago)</div>
+              <input class="amount-input" type="number" id="mp-${p.id}" value="${p.montoMP}" oninput="updateFaltaPagar(${p.id})">
+            </div>
+            <div class="amount-item">
+              <div class="amount-label">Pagado (Efectivo)</div>
+              <input class="amount-input" type="number" id="ef-${p.id}" value="${p.montoEfectivo}" oninput="updateFaltaPagar(${p.id})">
+            </div>
+            <div class="amount-item">
+              <div class="amount-label">Falta Pagar</div>
+              <input class="amount-input readonly" type="text" id="fp-${p.id}" value="$${p.faltaPagar.toLocaleString('es-AR')}" readonly>
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Notas</label>
+            <textarea class="field-textarea" id="notas-${p.id}">${p.notas}</textarea>
+          </div>
+        </div>
+        <div class="card-actions">
+          <button class="btn-delete" onclick="deleteProfessional(${p.id})">Eliminar</button>
+          <button class="btn-save" onclick="saveCard(${p.id})">💾 Guardar cambios</button>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function toggleCard(id) {
+  const card = document.getElementById("card-" + id);
+  card.classList.toggle("expanded");
+}
+
+function toggleEncuentro(id, idx, el) {
+  const p = professionals.find(x => x.id === id);
+  if (!p) return;
+  p.encuentros[idx] = !p.encuentros[idx];
+  el.classList.toggle("checked", p.encuentros[idx]);
+  showToast(`Encuentro E${idx+1} actualizado`);
+  syncToSheets(p);
+}
+
+function selectPago(id, tipo, btn) {
+  const p = professionals.find(x => x.id === id);
+  if (!p) return;
+  p.tipoPago = tipo;
+  const container = document.getElementById("pago-" + id);
+  container.querySelectorAll(".pago-btn").forEach(b => b.classList.remove("selected"));
+  btn.classList.add("selected");
+}
+
+function updateStatus(id, val) {
+  const p = professionals.find(x => x.id === id);
+  if (!p) return;
+  p.estado = val;
+  const pill = document.querySelector(`#card-${id} .status-pill`);
+  if (pill) {
+    pill.className = `status-pill status-${val.toLowerCase()}`;
+    pill.textContent = val;
+  }
+}
+
+function updateFaltaPagar(id) {
+  const p = professionals.find(x => x.id === id);
+  if (!p) return;
+  const mp = parseFloat(document.getElementById("mp-" + id).value) || 0;
+  const ef = parseFloat(document.getElementById("ef-" + id).value) || 0;
+  const total = mp + ef;
+  const costo = 80000;
+  const falta = Math.max(0, costo - total);
+  document.getElementById("fp-" + id).value = "$" + falta.toLocaleString("es-AR");
+}
+
+function saveCard(id) {
+  const p = professionals.find(x => x.id === id);
+  if (!p) return;
+  p.nombre = document.getElementById("nombre-" + id).value.trim();
+  p.apellido = document.getElementById("apellido-" + id).value.trim();
+  p.direccion = document.getElementById("direccion-" + id).value.trim();
+  p.especialidad = document.getElementById("especialidad-" + id).value.trim();
+  p.telefono = document.getElementById("telefono-" + id).value.trim();
+  p.notas = document.getElementById("notas-" + id).value.trim();
+  p.montoMP = parseFloat(document.getElementById("mp-" + id).value) || 0;
+  p.montoEfectivo = parseFloat(document.getElementById("ef-" + id).value) || 0;
+  p.estado = document.getElementById("estado-" + id).value;
+
+  filterProfessionals();
+  showToast("Cambios guardados ✓", "success");
+  syncToSheets(p);
+  recalcCosts();
+}
+
+function deleteProfessional(id) {
+  if (!confirm("¿Eliminar este profesional? Esta acción no se puede deshacer.")) return;
+  professionals = professionals.filter(p => p.id !== id);
+  filterProfessionals();
+  showToast("Profesional eliminado");
+}
+
+// ─── SEARCH / FILTER ───
+function filterProfessionals() {
+  const q = document.getElementById("searchInput").value.toLowerCase();
+  const filtered = professionals.filter(p =>
+    p.nombre.toLowerCase().includes(q) ||
+    p.apellido.toLowerCase().includes(q) ||
+    (p.especialidad || "").toLowerCase().includes(q)
+  );
+  renderProfessionals(filtered);
+}
+
+// ─── MODAL ───
+function openModal(id = null) {
+  editingId = id;
+  const modal = document.getElementById("modalOverlay");
+  modal.classList.add("open");
+  document.getElementById("modalTitle").textContent = id ? "Editar Profesional" : "Nuevo Profesional";
+  if (id) {
+    const p = professionals.find(x => x.id === id);
+    document.getElementById("mNombre").value = p.nombre;
+    document.getElementById("mApellido").value = p.apellido;
+    document.getElementById("mDireccion").value = p.direccion;
+    document.getElementById("mEspecialidad").value = p.especialidad;
+    document.getElementById("mTelefono").value = p.telefono;
+    document.getElementById("mEstado").value = p.estado;
+    document.getElementById("mNotas").value = p.notas;
+  } else {
+    ["mNombre","mApellido","mDireccion","mEspecialidad","mTelefono","mNotas"].forEach(id => document.getElementById(id).value = "");
+    document.getElementById("mEstado").value = "Pendiente";
+  }
+}
+
+function closeModal() {
+  document.getElementById("modalOverlay").classList.remove("open");
+  editingId = null;
+}
+
+function saveFromModal() {
+  const nombre = document.getElementById("mNombre").value.trim();
+  const apellido = document.getElementById("mApellido").value.trim();
+  if (!nombre || !apellido) { showToast("Nombre y Apellido son obligatorios", "error"); return; }
+
+  if (editingId) {
+    const p = professionals.find(x => x.id === editingId);
+    p.nombre = nombre; p.apellido = apellido;
+    p.direccion = document.getElementById("mDireccion").value.trim();
+    p.especialidad = document.getElementById("mEspecialidad").value.trim();
+    p.telefono = document.getElementById("mTelefono").value.trim();
+    p.estado = document.getElementById("mEstado").value;
+    p.notas = document.getElementById("mNotas").value.trim();
+  } else {
+    const newPro = {
+      id: ++nextId,
+      nombre, apellido,
+      direccion: document.getElementById("mDireccion").value.trim(),
+      especialidad: document.getElementById("mEspecialidad").value.trim(),
+      telefono: document.getElementById("mTelefono").value.trim(),
+      encuentros: [false,false,false,false,false,false],
+      tipoPago: "Efectivo",
+      montoMP: 0, montoEfectivo: 0, faltaPagar: 0,
+      notas: document.getElementById("mNotas").value.trim(),
+      estado: document.getElementById("mEstado").value
+    };
+    professionals.push(newPro);
+    syncToSheets(newPro);
+  }
+  closeModal();
+  filterProfessionals();
+  showToast("Profesional guardado ✓", "success");
+}
+
+// ─── COST SAVING ───
+function saveCosts() {
+  const eventName = document.getElementById("eventName").value.trim();
+  const eventDate = document.getElementById("eventDate").value;
+  if (!eventName) { showToast("Ingresá el nombre del evento", "error"); return; }
+
+  const totalStr = document.getElementById("totalCosto").textContent;
+  const now = new Date();
+  const dateStr = now.toLocaleDateString("es-AR") + " " + now.toLocaleTimeString("es-AR", {hour:"2-digit",minute:"2-digit"});
+
+  if (!confirm(`¿Guardar los costos del evento "${eventName}" del ${eventDate || "fecha sin definir"}?\nEsta acción agregará un nuevo registro al historial.`)) return;
+
+  const record = { eventName, eventDate, savedAt: dateStr, total: totalStr };
+  costsHistory.unshift(record);
+  renderHistory();
+  document.getElementById("lastSaved").textContent = "Guardado: " + dateStr;
+  showToast("✅ Costos guardados correctamente", "success");
+  syncCostsToSheets(record);
+}
+
+function renderHistory() {
+  const tbody = document.getElementById("historyBody");
+  if (costsHistory.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--gray-400); padding:24px">No hay registros guardados aún.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = costsHistory.map(r => `
+    <tr>
+      <td style="font-weight:500">${r.eventName}</td>
+      <td>${r.eventDate || "—"}</td>
+      <td style="color:var(--gray-400); font-size:12px">${r.savedAt}</td>
+      <td style="font-weight:600; color:var(--navy); font-family:'DM Mono',monospace">${r.total}</td>
+    </tr>
+  `).join("");
+}
+
+// ─── GOOGLE SHEETS SYNC (stub) ───
+async function syncToSheets(p) {
+  if (DEMO_MODE) return;
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "upsert", sheet: HOJA_PROFESIONALES, data: p })
+    });
+  } catch(e) { console.warn("Sync error", e); }
+}
+
+async function syncCostsToSheets(record) {
+  if (DEMO_MODE) return;
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "append", sheet: HOJA_COSTOS, data: record })
+    });
+  } catch(e) { console.warn("Sync error", e); }
+}
+
+// ─── TABS ───
+function switchTab(tab, btn) {
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById("tab-" + tab).classList.add("active");
+  btn.classList.add("active");
+  if (tab === "costos") recalcCosts();
+}
+
+// ─── TOAST ───
+function showToast(msg, type = "") {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className = "toast " + type + " show";
+  setTimeout(() => t.className = "toast " + type, 2800);
+}
+
+// ─── INIT ───
+document.addEventListener("DOMContentLoaded", () => {
+  professionals = [...demoData];
+  nextId = Math.max(...professionals.map(p => p.id));
+  filterProfessionals();
+  initCostTables();
+
+  const today = new Date().toISOString().split("T")[0];
+  document.getElementById("eventDate").value = today;
+
+  document.getElementById("modalOverlay").addEventListener("click", e => {
+    if (e.target === document.getElementById("modalOverlay")) closeModal();
+  });
+});
+</script>
+</body>
+</html>
